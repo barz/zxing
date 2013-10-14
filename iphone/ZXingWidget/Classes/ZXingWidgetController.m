@@ -159,6 +159,22 @@
   [self stopCapture];
 }
 
+
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+
 - (CGImageRef)CGImageRotated90:(CGImageRef)imgRef
 {
   CGFloat angleInRadians = -90 * (M_PI / 180);
