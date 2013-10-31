@@ -76,12 +76,24 @@ static const CGFloat kLicenseButtonPadding = 10;
     if (self.cancelEnabled) {
       UIButton *butt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
       self.cancelButton = butt;
-      if ([self.cancelButtonTitle length] > 0 ) {
-        [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
-      } else {
-        [cancelButton setTitle:NSLocalizedStringWithDefaultValue(@"OverlayView cancel button title", nil, [NSBundle mainBundle], @"Cancel", @"Cancel") forState:UIControlStateNormal];
-      }
-      [cancelButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+        
+        // Hsoi 2013-10-31 - Due to iOS 7 changes, the Cancel button can be very hard to see now (since it's
+        // frameless and the tint color can make it less visible). Let's try to beef it up a bit.
+        
+        NSString* baseTitle = self.cancelButtonTitle;
+        if (![baseTitle length]) {
+            baseTitle = NSLocalizedStringWithDefaultValue(@"OverlayView cancel button title", nil, [NSBundle mainBundle], @"Cancel", @"Cancel");
+        }
+        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+            [cancelButton setTitle:baseTitle forState:UIControlStateNormal];
+        }
+        else
+        {
+            NSAttributedString* attributedTitle = [[NSAttributedString alloc] initWithString:baseTitle attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:20.0]}];
+            [cancelButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];
+        }
+
+        [cancelButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
       [self addSubview:cancelButton];
     }
   }
